@@ -6,8 +6,12 @@ case "$(uname -s)" in
     *) exit 1;;
 esac
 
+image=${1:-output.ppm}
+
 make
 
-./raytracer > output.ppm
+echo "Generating ${image}"
 
-${OPEN} output.ppm &
+./raytracer > ${image}
+
+${OPEN} ${image} &
