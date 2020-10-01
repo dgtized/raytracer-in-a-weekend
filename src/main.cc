@@ -41,6 +41,15 @@ void refractive_dielectrics(hittable_list& world) {
   world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
 }
 
+void camera_fov_test(hittable_list& world) {
+  auto R = cos(pi/4);
+  auto material_left  = make_shared<lambertian>(color(0,0,1));
+  auto material_right = make_shared<lambertian>(color(1,0,0));
+
+  world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
+  world.add(make_shared<sphere>(point3( R, 0, -1), R, material_right));
+}
+
 int main() {
 
   // Image
@@ -53,18 +62,12 @@ int main() {
 
   // World
 
-  auto R = cos(pi/4);
   hittable_list world;
-
-  auto material_left  = make_shared<lambertian>(color(0,0,1));
-  auto material_right = make_shared<lambertian>(color(1,0,0));
-
-  world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
-  world.add(make_shared<sphere>(point3( R, 0, -1), R, material_right));
+  refractive_dielectrics(world);
 
   // Camera
 
-  camera cam(90.0, aspect_ratio);
+  camera cam(point3(-2, 2, 1), point3(0,0,-1), vec3(0,1,0), 20.0, aspect_ratio);
 
   // Render
 
