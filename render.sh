@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 case "$(uname -s)" in
     Linux*) OPEN=xdg-open;;
     Darwin*) OPEN=open;;
