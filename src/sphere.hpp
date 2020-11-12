@@ -18,6 +18,7 @@ public:
   shared_ptr<material> mat_ptr;
 };
 
+// Profiling says this is 25% of program time
 bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
   vec3 oc = r.origin() - center;
   auto a = r.direction().length_squared();

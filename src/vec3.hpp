@@ -41,6 +41,7 @@ public:
     return sqrt(length_squared());
   }
 
+  // Profiling says this is 10% of program time
   double length_squared() const {
     return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
   }
@@ -89,6 +90,7 @@ inline vec3 operator/(vec3 v, double t) {
   return (1/t) * v;
 }
 
+// Profiling says this is 13% of program time
 inline double dot(const vec3 &u, const vec3 &v) {
   return u.e[0] * v.e[0]
     + u.e[1] * v.e[1]

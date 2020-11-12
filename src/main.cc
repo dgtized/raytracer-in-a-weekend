@@ -27,7 +27,9 @@ color ray_color(const ray& r, const hittable& world, int depth) {
   return (1.0-t) * color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
 }
 
-void refractive_dielectrics(hittable_list& world) {
+hittable_list refractive_dielectrics() {
+  hittable_list world;
+
   // This looks funny on reflection and the dielectric isn't being reflected, why?
   auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
   auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
@@ -39,15 +41,21 @@ void refractive_dielectrics(hittable_list& world) {
   world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
   world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),  -0.45, material_left));
   world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
+
+  return world;
 }
 
-void camera_fov_test(hittable_list& world) {
+hittable_list camera_fov_test() {
+  hittable_list world;
+
   auto R = cos(pi/4);
   auto material_left  = make_shared<lambertian>(color(0,0,1));
   auto material_right = make_shared<lambertian>(color(1,0,0));
 
   world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
   world.add(make_shared<sphere>(point3( R, 0, -1), R, material_right));
+
+  return world;
 }
 
 hittable_list random_scene() {
@@ -101,16 +109,15 @@ int main() {
   // Image
 
   const auto aspect_ratio = 3.0 / 2.0;
-  const int image_width = 1200;
+  const int image_width = 300;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
-  const int samples_per_pixel = 500;
-  const int max_depth = 50;
+  const int samples_per_pixel = 10;
+  const int max_depth = 20;
 
   // World
 
   auto world = random_scene();
-  // hittable_list world;
-  // refractive_dielectrics(world);
+  // auto world = refractive_dielectrics();
 
   // Camera
 

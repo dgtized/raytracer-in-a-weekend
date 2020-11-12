@@ -1,2 +1,3 @@
 raytracer
 src/*.o
+profiles/*.png

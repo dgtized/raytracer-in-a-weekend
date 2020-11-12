@@ -1,0 +1,20 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 25.13      4.91     4.91 787365529     0.00     0.00  sphere::hit(ray const&, double, double, hit_record&) const
+ 13.28      7.51     2.60 789587689     0.00     0.00  dot(vec3 const&, vec3 const&)
+ 10.03      9.47     1.96 1576894905     0.00     0.00  vec3::length_squared() const
+  8.14     11.06     1.59  1616767     0.00     0.01  hittable_list::hit(ray const&, double, double, hit_record&) const
+  7.88     12.60     1.54 790378064     0.00     0.00  operator-(vec3 const&, vec3 const&)
+  5.45     13.66     1.07 1577444685     0.00     0.00  ray::direction() const
+  4.30     14.50     0.84 809607895     0.00     0.00  vec3::vec3(double, double, double)
+  3.81     15.25     0.75 788982296     0.00     0.00  bool __gnu_cxx::operator!=<std::shared_ptr<hittable> const*, std::vector<std::shared_ptr<hittable>, std::allocator<std::shared_ptr<hittable> > > >(__gnu_cxx::__normal_iterator<std::shared_ptr<hittable> const*, std::vector<std::shared_ptr<hittable>, std::allocator<std::shared_ptr<hittable> > > > const&, __gnu_cxx::__normal_iterator<std::shared_ptr<hittable> const*, std::vector<std::shared_ptr<hittable>, std::allocator<std::shared_ptr<hittable> > > > const&)
+  3.61     15.95     0.71 787365529     0.00     0.00  ray::origin() const
+  3.53     16.64     0.69 1577964592     0.00     0.00  __gnu_cxx::__normal_iterator<std::shared_ptr<hittable> const*, std::vector<std::shared_ptr<hittable>, std::allocator<std::shared_ptr<hittable> > > >::base() const
+  2.61     17.15     0.51 787365529     0.00     0.00  std::__shared_ptr_access<hittable, (__gnu_cxx::_Lock_policy)2, false, false>::_M_get() const
+  2.28     17.60     0.45 787365529     0.00     0.00  __gnu_cxx::__normal_iterator<std::shared_ptr<hittable> const*, std::vector<std::shared_ptr<hittable>, std::allocator<std::shared_ptr<hittable> > > >::operator++()
+  1.89     17.97     0.37 787365529     0.00     0.00  std::__shared_ptr_access<hittable, (__gnu_cxx::_Lock_policy)2, false, false>::operator->() const
+  1.71     18.30     0.34 787365529     0.00     0.00  __gnu_cxx::__normal_iterator<std::shared_ptr<hittable> const*, std::vector<std::shared_ptr<hittable>, std::allocator<std::shared_ptr<hittable> > > >::operator*() const
+  1.69     18.63     0.33 787365529     0.00     0.00  std::__shared_ptr<hittable, (__gnu_cxx::_Lock_policy)2>::get() const
