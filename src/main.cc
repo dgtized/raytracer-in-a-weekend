@@ -58,6 +58,18 @@ hittable_list camera_fov_test() {
   return world;
 }
 
+hittable_list camera_fov_animation(float r) {
+  hittable_list world;
+
+  auto material_left  = make_shared<lambertian>(color(0,0,1));
+  auto material_right = make_shared<lambertian>(color(1,0,0));
+
+  world.add(make_shared<sphere>(point3(-r, 0, -1), r, material_left));
+  world.add(make_shared<sphere>(point3( r, 0, -1), r, material_right));
+
+  return world;
+}
+
 hittable_list random_scene() {
   hittable_list world;
 
@@ -104,10 +116,7 @@ hittable_list random_scene() {
   return world;
 }
 
-int main() {
-
-  // Image
-
+void render_frame(const hittable_list &world) {
   const auto aspect_ratio = 3.0 / 2.0;
   const int image_width = 300;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
@@ -116,7 +125,6 @@ int main() {
 
   // World
 
-  auto world = random_scene();
   // auto world = refractive_dielectrics();
 
   // Camera
@@ -147,6 +155,13 @@ int main() {
       write_color(std::cout, pixel_color, samples_per_pixel);
     }
   }
+  fflush(stdout);
 
   std::cerr << "\nDone.\n";
+}
+
+int main() {
+  for(float angle = pi/4; angle >= pi/10; angle -= 0.001) {
+    render_frame(camera_fov_animation(cos(angle)));
+  }
 }
