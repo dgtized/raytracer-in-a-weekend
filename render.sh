@@ -8,12 +8,15 @@ case "$(uname -s)" in
     *) exit 1;;
 esac
 
-image=${1:-output.ppm}
-
 make
 
-echo "Generating ${image}"
-
-./raytracer > ${image}
-
-${OPEN} ${image} &
+if [[ $1 == mpv ]]; then
+    echo "Generating video"
+    ./raytracer > foo.video
+    mpv --no-correct-pts --fps=30 foo.video
+else
+    image=${1:-output.ppm}
+    echo "Generating ${image}"
+    ./raytracer > ${image}
+    ${OPEN} ${image} &
+fi
