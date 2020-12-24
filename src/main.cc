@@ -58,7 +58,7 @@ hittable_list camera_fov_test() {
   return world;
 }
 
-hittable_list camera_fov_animation(int frame_count) {
+hittable_list camera_fov_animation(int frame_count, float total_frames) {
   hittable_list world;
 
   auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
@@ -66,8 +66,10 @@ hittable_list camera_fov_animation(int frame_count) {
 
   world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
 
-  float x = -5.0 + frame_count * 10.0 / 60.0;
-  world.add(make_shared<sphere>(point3(x, 0, -1), 0.5, material_ball));
+  float theta = pi/2 + pi/16 - (frame_count * 2 * (pi/16 / total_frames));
+  float x = 100 * cos(theta);
+  float y = 100 * sin(theta) - 100.0;
+  world.add(make_shared<sphere>(point3(x, y, -1), 0.5, material_ball));
 
   return world;
 }
@@ -122,7 +124,7 @@ void render_frame(const hittable_list &world) {
   const auto aspect_ratio = 3.0 / 2.0;
   const int image_width = 300;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
-  const int samples_per_pixel = 10;
+  const int samples_per_pixel = 20;
   const int max_depth = 20;
 
   // Camera
@@ -155,13 +157,15 @@ void render_frame(const hittable_list &world) {
   }
   fflush(stdout);
 
-  std::cerr << "\nDone.\n";
+  // std::cerr << "\nDone.\n";
 }
 
 int main() {
-  auto video_length_s = 2;
+  auto video_length_s = 6;
   auto frame_rate_s = 30;
-  for(int frame_count = 0; frame_count < frame_rate_s * video_length_s; frame_count++) {
-    render_frame(camera_fov_animation(frame_count));
+  auto max_frames = frame_rate_s * video_length_s;
+  for(int frame_count = 0; frame_count < max_frames; frame_count++) {
+    std::cerr << "Rendering frame " << frame_count << std::flush;
+    render_frame(camera_fov_animation(frame_count, max_frames));
   }
 }
