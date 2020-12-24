@@ -13,7 +13,7 @@ make
 if [[ $1 == mpv ]]; then
     echo "Generating video"
     ./raytracer > foo.video
-    mpv --no-correct-pts --fps=30 foo.video
+    mpv --no-correct-pts --fps=30 --keep-open=yes foo.video
 else
     image=${1:-output.ppm}
     echo "Generating ${image}"
