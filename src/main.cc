@@ -58,14 +58,16 @@ hittable_list camera_fov_test() {
   return world;
 }
 
-hittable_list camera_fov_animation(float r) {
+hittable_list camera_fov_animation(int frame_count) {
   hittable_list world;
 
-  auto material_left  = make_shared<lambertian>(color(0,0,1));
-  auto material_right = make_shared<lambertian>(color(1,0,0));
+  auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+  auto material_ball = make_shared<lambertian>(color(0.1, 0.2, 0.5));
 
-  world.add(make_shared<sphere>(point3(-r, 0, -1), r, material_left));
-  world.add(make_shared<sphere>(point3( r, 0, -1), r, material_right));
+  world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+
+  float x = -5.0 + frame_count * 10.0 / 60.0;
+  world.add(make_shared<sphere>(point3(x, 0, -1), 0.5, material_ball));
 
   return world;
 }
@@ -123,10 +125,6 @@ void render_frame(const hittable_list &world) {
   const int samples_per_pixel = 10;
   const int max_depth = 20;
 
-  // World
-
-  // auto world = refractive_dielectrics();
-
   // Camera
 
   point3 lookfrom(13,2,3);
@@ -134,7 +132,7 @@ void render_frame(const hittable_list &world) {
   vec3 vup(0,1,0);
   auto dist_to_focus = 10.0;
   auto aperture = 0.1;
-  camera cam(lookfrom, lookat, vup, 20.0, aspect_ratio, aperture, dist_to_focus);
+  camera cam(lookfrom, lookat, vup, 30.0, aspect_ratio, aperture, dist_to_focus);
 
   // Render
 
@@ -161,7 +159,9 @@ void render_frame(const hittable_list &world) {
 }
 
 int main() {
-  for(float angle = pi/4; angle >= pi/10; angle -= 0.001) {
-    render_frame(camera_fov_animation(cos(angle)));
+  auto video_length_s = 2;
+  auto frame_rate_s = 30;
+  for(int frame_count = 0; frame_count < frame_rate_s * video_length_s; frame_count++) {
+    render_frame(camera_fov_animation(frame_count));
   }
 }
