@@ -13,3 +13,4 @@ Also experimenting with basic animation by exporting PPM video from:
 Other Resources:
 
  * [Camera and Lenses](https://ciechanow.ski/cameras-and-lenses/)
+ * [WebGL 2.0 Compute Shader: Raytracer](https://oktomus.com/web-experiments/webgl-compute/toy-raytracer/)
