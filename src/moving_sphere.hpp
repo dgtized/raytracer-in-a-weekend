@@ -1,9 +1,9 @@
 #ifndef MOVING_SPHERE_H
 #define MOVING_SPHERE_H
 
-#include "rtweekend.h"
+#include "rtweekend.hpp"
 
-#include "hittable.h"
+#include "hittable.hpp"
 
 
 class moving_sphere : public hittable {
