@@ -11,6 +11,8 @@ public:
   point3 min() const {return minimum; }
   point3 max() const {return maximum; }
 
+  bool hit(const ray& r, double t_min, double t_max) const;
+
   point3 minimum;
   point3 maximum;
 };
