@@ -6,6 +6,7 @@
 #include "moving_sphere.hpp"
 #include "camera.hpp"
 #include "material.hpp"
+#include "bvh.hpp"
 
 #include <iostream>
 
@@ -119,7 +120,7 @@ int main() {
 
   // World
 
-  auto world = random_scene();
+  auto world = bvh_node(random_scene(), 0, 1);
   // auto world = refractive_dielectrics();
 
   // Camera
