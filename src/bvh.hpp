@@ -58,8 +58,8 @@ bvh_node::bvh_node(
 
   int axis = random_int(0,2);
   auto comparator = (axis == 0) ? box_x_compare
-                  : (axis == 1) ? box_y_compare
-                                : box_z_compare
+    : (axis == 1) ? box_y_compare
+    : box_z_compare;
 
   size_t object_span = end - start;
   if (object_span == 1) {
@@ -85,7 +85,7 @@ bvh_node::bvh_node(
   if ( !left->bounding_box(time0, time1, box_left)
     || !right->bounding_box(time0, time1, box_right)
   ) {
-    std::cerr << "No bounding boxin bvh constructor.\n";
+    std::cerr << "No bounding box in bvh constructor.\n";
   }
 
   box = surrounding_box(box_left, box_right);
