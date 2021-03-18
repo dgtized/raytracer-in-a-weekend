@@ -30,7 +30,7 @@ public:
 };
 
 bvh_node::bvh_node(
-  std::vector<shared_ptr<hittable>>& src_objects,
+  const std::vector<shared_ptr<hittable>>& src_objects,
   size_t start, size_t end, double time0, double time1
 ) {
   auto objects = src_objects; // create a modifiable array of the source scene objects
