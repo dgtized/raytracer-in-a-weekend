@@ -60,6 +60,17 @@ hittable_list camera_fov_test() {
   return world;
 }
 
+hittable_list two_spheres() {
+  hittable_list objects;
+
+  auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+
+  objects.add(make_shared<sphere>(point3(0,-10, 0), 10, make_shared<lambertian>(checker)));
+  objects.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker)));
+
+  return objects;
+}
+
 hittable_list random_scene() {
   hittable_list world;
 
@@ -109,6 +120,14 @@ hittable_list random_scene() {
   return world;
 }
 
+camera camera_at(const point3 &lookfrom, const point3 &lookat,
+                 double aspect_ratio, double fov, double aperture) {
+  vec3 vup(0,1,0);
+  auto dist_to_focus = 10.0;
+
+  return camera(lookfrom, lookat, vup, fov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
+}
+
 int main() {
 
   // Image
@@ -121,17 +140,19 @@ int main() {
 
   // World
 
-  auto world = bvh_node(random_scene(), 0, 1);
+  bvh_node world;
+  camera cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.1);
+
+  switch(1) {
+  case 1:
+    world = bvh_node(random_scene(), 0, 1);
+    break;
+  default:
+  case 2:
+    world = bvh_node(two_spheres(), 0, 1);
+    cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.0);
+  }
   // auto world = refractive_dielectrics();
-
-  // Camera
-
-  point3 lookfrom(13,2,3);
-  point3 lookat(0,0,0);
-  vec3 vup(0,1,0);
-  auto dist_to_focus = 10.0;
-  auto aperture = 0.1;
-  camera cam(lookfrom, lookat, vup, 20.0, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
 
   // Render
 
