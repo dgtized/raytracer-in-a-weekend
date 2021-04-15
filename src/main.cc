@@ -71,6 +71,19 @@ hittable_list two_spheres() {
   return objects;
 }
 
+hittable_list two_perlin_spheres() {
+  hittable_list objects;
+
+  auto perlin_text = make_shared<noise_texture>();
+
+  objects.add(make_shared<sphere>(point3(0,-1000,0), 1000,
+                                  make_shared<lambertian>(perlin_text)));
+  objects.add(make_shared<sphere>(point3(0,2,0), 2,
+                                  make_shared<lambertian>(perlin_text)));
+
+  return objects;
+}
+
 hittable_list random_scene() {
   hittable_list world;
 
@@ -133,7 +146,7 @@ int main() {
   // Image
 
   const auto aspect_ratio = 16.0 / 9.0;
-  const int image_width = 400;
+  const int image_width = 600;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
   const int samples_per_pixel = 20;
   const int max_depth = 20;
@@ -143,14 +156,18 @@ int main() {
   bvh_node world;
   camera cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.1);
 
-  switch(1) {
+  switch(0) {
   case 1:
     world = bvh_node(random_scene(), 0, 1);
     break;
-  default:
   case 2:
     world = bvh_node(two_spheres(), 0, 1);
     cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.0);
+    break;
+  default:
+  case 3:
+    world = bvh_node(two_perlin_spheres(), 0, 1);
+    break;
   }
   // auto world = refractive_dielectrics();
 
