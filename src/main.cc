@@ -133,6 +133,14 @@ hittable_list random_scene() {
   return world;
 }
 
+hittable_list earth() {
+  auto earth_texture = make_shared<image_texture>("images/earthmap.jpg");
+  auto earth_surface = make_shared<lambertian>(earth_texture);
+  auto globe = make_shared<sphere>(point3(0,0,0), 2, earth_surface);
+
+  return hittable_list(globe);
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -164,12 +172,15 @@ int main() {
     world = bvh_node(two_spheres(), 0, 1);
     cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.0);
     break;
-  default:
   case 3:
     world = bvh_node(two_perlin_spheres(), 0, 1);
     break;
+  default:
+  case 4:
+    world = bvh_node(earth(), 0, 1);
+    cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.0);
+    break;
   }
-  // auto world = refractive_dielectrics();
 
   // Render
 
