@@ -1,3 +1,4 @@
 raytracer
 src/*.o
 profiles/*.png
+/vendor/stb/
