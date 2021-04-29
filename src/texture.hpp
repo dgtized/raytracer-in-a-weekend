@@ -2,7 +2,10 @@
 #define TEXTURE_H
 
 #include "rtweekend.hpp"
+#include "rtw_stb_image.hpp"
 #include "perlin.hpp"
+
+#include <iostream>
 
 class texture {
 public:
