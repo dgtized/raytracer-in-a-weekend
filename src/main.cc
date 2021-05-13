@@ -163,6 +163,24 @@ hittable_list simple_light() {
   return objects;
 }
 
+hittable_list cornell_box() {
+  hittable_list objects;
+
+  auto red   = make_shared<lambertian>(color(.65, .05, .05));
+  auto white = make_shared<lambertian>(color(.73, .73, .73));
+  auto green = make_shared<lambertian>(color(.12, .45, .15));
+  auto light = make_shared<diffuse_light>(color(15, 15, 15));
+
+  objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+  objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+  objects.add(make_shared<xz_rect>(213, 343, 227, 332, 554, light));
+  objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+  objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+  objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+  return objects;
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -175,9 +193,8 @@ int main() {
 
   // Image
 
-  const auto aspect_ratio = 16.0 / 9.0;
-  const int image_width = 600;
-  const int image_height = static_cast<int>(image_width / aspect_ratio);
+  auto aspect_ratio = 16.0 / 9.0;
+  int image_width = 600;
   int samples_per_pixel = 20;
   const int max_depth = 20;
 
@@ -206,17 +223,25 @@ int main() {
     background = color(0.70, 0.80, 1.00);
     cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.0);
     break;
-  default:
   case 5:
     world = bvh_node(simple_light(), 0, 1);
     samples_per_pixel = 400;
     background = color(0.0, 0.0, 0.0);
     cam = camera_at(point3(26,3,6), point3(0,2,0), aspect_ratio, 20.0, 0.0);
     break;
+  default:
+  case 6:
+    world = bvh_node(cornell_box(), 0, 1);
+    aspect_ratio = 1.0;
+    image_width = 600;
+    samples_per_pixel = 200;
+    background = color(0,0,0);
+    cam = camera_at(point3(278, 278, -800), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
   }
 
   // Render
 
+  const int image_height = static_cast<int>(image_width / aspect_ratio);
   std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
   for (int j = image_height-1; j >= 0; --j) {
