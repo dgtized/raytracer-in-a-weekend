@@ -156,6 +156,9 @@ hittable_list simple_light() {
 
   auto difflight = make_shared<diffuse_light>(color(4.0,4.0,4.0));
   objects.add(make_shared<xy_rect>(3,5,1,3,-2, difflight));
+  // optional overhead light
+  auto difflight2 = make_shared<diffuse_light>(color(0.5,0.0,0.0));
+  objects.add(make_shared<sphere>(point3(0,7,0), 1, difflight2));
 
   return objects;
 }
