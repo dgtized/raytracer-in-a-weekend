@@ -7,6 +7,7 @@
 #include "camera.hpp"
 #include "material.hpp"
 #include "bvh.hpp"
+#include "aarect.hpp"
 
 #include <iostream>
 
@@ -146,6 +147,19 @@ hittable_list earth() {
   return hittable_list(globe);
 }
 
+hittable_list simple_light() {
+  hittable_list objects;
+  auto pertext = make_shared<noise_texture>(4);
+
+  objects.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(pertext)));
+  objects.add(make_shared<sphere>(point3(0,2,0), 2, make_shared<lambertian>(pertext)));
+
+  auto difflight = make_shared<diffuse_light>(color(4.0,4.0,4.0));
+  objects.add(make_shared<xy_rect>(3,5,1,3,-2, difflight));
+
+  return objects;
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -161,7 +175,7 @@ int main() {
   const auto aspect_ratio = 16.0 / 9.0;
   const int image_width = 600;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
-  const int samples_per_pixel = 20;
+  int samples_per_pixel = 20;
   const int max_depth = 20;
 
   // World
@@ -184,11 +198,17 @@ int main() {
     world = bvh_node(two_perlin_spheres(), 0, 1);
     background = color(0.70, 0.80, 1.00);
     break;
-  default:
   case 4:
     world = bvh_node(earth(), 0, 1);
     background = color(0.70, 0.80, 1.00);
     cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.0);
+    break;
+  default:
+  case 5:
+    world = bvh_node(simple_light(), 0, 1);
+    samples_per_pixel = 400;
+    background = color(0.0, 0.0, 0.0);
+    cam = camera_at(point3(26,3,6), point3(0,2,0), aspect_ratio, 20.0, 0.0);
     break;
   }
 
