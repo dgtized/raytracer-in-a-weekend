@@ -200,7 +200,7 @@ int main() {
   auto aspect_ratio = 16.0 / 9.0;
   int image_width = 600;
   int samples_per_pixel = 20;
-  const int max_depth = 10;
+  const int max_depth = 20;
 
   // World
 
@@ -238,7 +238,7 @@ int main() {
     world = bvh_node(cornell_box(), 0, 1);
     aspect_ratio = 1.0;
     image_width = 600;
-    samples_per_pixel = 100;
+    samples_per_pixel = 20;
     background = color(0,0,0);
     cam = camera_at(point3(278, 278, -800), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
   }
