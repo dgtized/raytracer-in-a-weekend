@@ -8,6 +8,7 @@
 #include "material.hpp"
 #include "bvh.hpp"
 #include "aarect.hpp"
+#include "box.hpp"
 
 #include <iostream>
 
@@ -178,6 +179,9 @@ hittable_list cornell_box() {
   objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
   objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
+  objects.add(make_shared<box>(point3(130, 0, 65), point3(295, 165, 230), white));
+  objects.add(make_shared<box>(point3(265, 0, 295), point3(430, 330, 460), white));
+
   return objects;
 }
 
@@ -196,7 +200,7 @@ int main() {
   auto aspect_ratio = 16.0 / 9.0;
   int image_width = 600;
   int samples_per_pixel = 20;
-  const int max_depth = 20;
+  const int max_depth = 10;
 
   // World
 
@@ -234,7 +238,7 @@ int main() {
     world = bvh_node(cornell_box(), 0, 1);
     aspect_ratio = 1.0;
     image_width = 600;
-    samples_per_pixel = 200;
+    samples_per_pixel = 100;
     background = color(0,0,0);
     cam = camera_at(point3(278, 278, -800), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
   }
