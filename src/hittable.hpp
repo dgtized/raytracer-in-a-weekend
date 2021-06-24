@@ -118,6 +118,8 @@ bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record &rec) co
   auto origin = r.origin();
   auto direction = r.direction();
 
+  // Math Question, not following, why are we doing a Z-axis rotation for
+  // origin/direction when we are rotating around Y? It works but why.
   origin[0] = cos_theta*r.origin()[0] - sin_theta*r.origin()[2];
   origin[2] = sin_theta*r.origin()[0] + cos_theta*r.origin()[2];
 
