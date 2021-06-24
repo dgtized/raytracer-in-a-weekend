@@ -182,9 +182,17 @@ hittable_list cornell_box() {
   objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
   objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
 
-  auto back_box = make_shared<box>(point3(130, 0, 65), point3(295, 165, 230), red);
-  objects.add(make_shared<translate>(back_box, point3(0, 100, 0)));
-  objects.add(make_shared<box>(point3(265, 0, 295), point3(430, 330, 460), white));
+  shared_ptr<hittable> back_box =
+    make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+  //back_box = make_shared<rotate_y>(back_box, 15);
+  back_box = make_shared<translate>(back_box, point3(265, 0, 295));
+  objects.add(back_box);
+
+  shared_ptr<hittable> front_box =
+    make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+  //front_box = make_shared<rotate_y>(front_box, -18);
+  front_box = make_shared<translate>(front_box, vec3(130,0,65));
+  objects.add(front_box);
 
   return objects;
 }
@@ -202,9 +210,9 @@ int main() {
   // Image
 
   auto aspect_ratio = 16.0 / 9.0;
-  int image_width = 600;
-  int samples_per_pixel = 20;
-  const int max_depth = 20;
+  int image_width = 500;
+  int samples_per_pixel = 8;
+  const int max_depth = 8;
 
   // World
 
