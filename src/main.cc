@@ -184,13 +184,13 @@ hittable_list cornell_box() {
 
   shared_ptr<hittable> back_box =
     make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
-  //back_box = make_shared<rotate_y>(back_box, 15);
+  back_box = make_shared<rotate_y>(back_box, 15);
   back_box = make_shared<translate>(back_box, point3(265, 0, 295));
   objects.add(back_box);
 
   shared_ptr<hittable> front_box =
     make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
-  //front_box = make_shared<rotate_y>(front_box, -18);
+  front_box = make_shared<rotate_y>(front_box, -18);
   front_box = make_shared<translate>(front_box, vec3(130,0,65));
   objects.add(front_box);
 
