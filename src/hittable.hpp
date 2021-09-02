@@ -114,12 +114,15 @@ rotate_y::rotate_y(shared_ptr<hittable> p, double angle) : ptr(p) {
   bbox = aabb(min, max);
 }
 
+// x′=cos(θ)⋅x+sin(θ)⋅z
+// z′=−sin(θ)⋅x+cos(θ)⋅z
 bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record &rec) const {
   auto origin = r.origin();
   auto direction = r.direction();
 
-  // Math Question, not following, why are we doing a Z-axis rotation for
-  // origin/direction when we are rotating around Y? It works but why.
+  // Why are the Z coordinate sin's not negated like below? If this is applied
+  // it skews/stretches the object so clearly wrong, but not clear on why the
+  // math works this way.
   origin[0] = cos_theta*r.origin()[0] - sin_theta*r.origin()[2];
   origin[2] = sin_theta*r.origin()[0] + cos_theta*r.origin()[2];
 
@@ -135,11 +138,12 @@ bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record &rec) co
   auto p = rec.p;
   auto normal = rec.normal;
 
+  // rotate around the y-axis, so update X and Z
   p[0] = cos_theta*rec.p[0] + sin_theta*rec.p[2];
-  p[2] = -sin_theta*rec.p[0] + cos_theta*rec.p[2];
+  p[2] = - sin_theta*rec.p[0] + cos_theta*rec.p[2];
 
   normal[0] = cos_theta*rec.normal[0] + sin_theta*rec.normal[2];
-  normal[2] = -sin_theta*rec.normal[0] + cos_theta*rec.normal[2];
+  normal[2] = - sin_theta*rec.normal[0] + cos_theta*rec.normal[2];
 
   rec.p = p;
   rec.set_face_normal(rotated_r, normal);
