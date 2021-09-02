@@ -9,6 +9,7 @@
 #include "bvh.hpp"
 #include "aarect.hpp"
 #include "box.hpp"
+#include "constant_medium.hpp"
 
 #include <iostream>
 
@@ -197,6 +198,35 @@ hittable_list cornell_box() {
   return objects;
 }
 
+hittable_list cornell_smoke() {
+  hittable_list objects;
+
+  auto red   = make_shared<lambertian>(color(.65, .05, .05));
+  auto white = make_shared<lambertian>(color(.73, .73, .73));
+  auto green = make_shared<lambertian>(color(.12, .45, .15));
+  auto light = make_shared<diffuse_light>(color(7, 7, 7));
+
+  objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+  objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+  objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, light));
+  objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+  objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+  objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+  shared_ptr<hittable> box1 = make_shared<box>(point3(0,0,0), point3(165,330,165), white);
+  box1 = make_shared<rotate_y>(box1, 15);
+  box1 = make_shared<translate>(box1, vec3(265,0,295));
+
+  shared_ptr<hittable> box2 = make_shared<box>(point3(0,0,0), point3(165,165,165), white);
+  box2 = make_shared<rotate_y>(box2, -18);
+  box2 = make_shared<translate>(box2, vec3(130,0,65));
+
+  objects.add(make_shared<constant_medium>(box1, 0.01, color(0,0,0)));
+  objects.add(make_shared<constant_medium>(box2, 0.01, color(1,1,1)));
+
+  return objects;
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -245,7 +275,6 @@ int main() {
     background = color(0.0, 0.0, 0.0);
     cam = camera_at(point3(26,3,6), point3(0,2,0), aspect_ratio, 20.0, 0.0);
     break;
-  default:
   case 6:
     world = bvh_node(cornell_box(), 0, 1);
     aspect_ratio = 1.0;
@@ -253,6 +282,15 @@ int main() {
     samples_per_pixel = 20;
     background = color(0,0,0);
     cam = camera_at(point3(278, 278, -800), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
+    break;
+  default:
+  case 7:
+    world = bvh_node(cornell_smoke(), 0, 1);
+    aspect_ratio = 1.0;
+    image_width = 600;
+    samples_per_pixel = 100;
+    cam = camera_at(point3(278, 278, -800), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
+    break;
   }
 
   // Render
