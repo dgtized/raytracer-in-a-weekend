@@ -120,9 +120,8 @@ bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record &rec) co
   auto origin = r.origin();
   auto direction = r.direction();
 
-  // Why are the Z coordinate sin's not negated like below? If this is applied
-  // it skews/stretches the object so clearly wrong, but not clear on why the
-  // math works this way.
+  // This is checking for intersection in world coordinates and inverts the rotation logic.
+  // See https://github.com/RayTracing/raytracing.github.io/issues/544 for explanation.
   origin[0] = cos_theta*r.origin()[0] - sin_theta*r.origin()[2];
   origin[2] = sin_theta*r.origin()[0] + cos_theta*r.origin()[2];
 
