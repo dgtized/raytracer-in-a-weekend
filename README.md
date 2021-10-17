@@ -13,3 +13,4 @@ Also experimenting with basic animation by exporting PPM video from:
 Other Resources:
 
  * [Camera and Lenses](https://ciechanow.ski/cameras-and-lenses/)
+ * [ScratchAPixel](https://www.scratchapixel.com/)
