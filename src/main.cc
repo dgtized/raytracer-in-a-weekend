@@ -231,6 +231,7 @@ hittable_list final_scene() {
   hittable_list boxes1;
   auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 
+  // floor cubes, 20x20
   const int boxes_per_side = 20;
   for (int i = 0; i < boxes_per_side; i++) {
     for (int j = 0; j < boxes_per_side; j++) {
@@ -250,30 +251,38 @@ hittable_list final_scene() {
 
   objects.add(make_shared<bvh_node>(boxes1, 0, 1));
 
+  // light up top
   auto light = make_shared<diffuse_light>(color(7, 7, 7));
   objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
 
+  // copper moving sphere
   auto center1 = point3(400, 400, 200);
   auto center2 = center1 + vec3(30,0,0);
   auto moving_sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
   objects.add(make_shared<moving_sphere>(center1, center2, 0, 1, 50, moving_sphere_material));
 
+  // transparent globe
   objects.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
+  // lower right metal sphere
   objects.add(make_shared<sphere>(
                                   point3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)
                                   ));
 
+  // blue metal ball
   auto boundary = make_shared<sphere>(point3(360,150,145), 70, make_shared<dielectric>(1.5));
   objects.add(boundary);
   objects.add(make_shared<constant_medium>(boundary, 0.2, color(0.2, 0.4, 0.9)));
+  // unknown
   boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
   objects.add(make_shared<constant_medium>(boundary, .0001, color(1,1,1)));
 
+  // earthglobe
   auto emat = make_shared<lambertian>(make_shared<image_texture>("images/earthmap.jpg"));
   objects.add(make_shared<sphere>(point3(400,200,400), 100, emat));
   auto pertext = make_shared<noise_texture>(0.1);
   objects.add(make_shared<sphere>(point3(220,280,300), 80, make_shared<lambertian>(pertext)));
 
+  // cube of spheres
   hittable_list boxes2;
   auto white = make_shared<lambertian>(color(.73, .73, .73));
   int ns = 1000;
