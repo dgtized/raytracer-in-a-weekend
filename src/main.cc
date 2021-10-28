@@ -295,6 +295,64 @@ hittable_list final_scene() {
   return objects;
 }
 
+hittable_list ghost_scene() {
+  hittable_list boxes1;
+  auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+
+  // floor cubes, 20x20
+  const int boxes_per_side = 20;
+  for (int i = 0; i < boxes_per_side; i++) {
+    for (int j = 0; j < boxes_per_side; j++) {
+      auto w = 100.0;
+      auto x0 = -1000.0 + i*w;
+      auto z0 = -1000.0 + j*w;
+      auto y0 = 0.0;
+      auto x1 = x0 + w;
+      auto y1 = random_double(1,101);
+      auto z1 = z0 + w;
+
+      boxes1.add(make_shared<box>(point3(x0,y0,z0), point3(x1,y1,z1), ground));
+    }
+  }
+
+  hittable_list objects;
+
+  objects.add(make_shared<bvh_node>(boxes1, 0, 1));
+
+  // light up top
+  auto light = make_shared<diffuse_light>(color(7, 7, 7));
+  objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
+
+  // transparent globe
+  // objects.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
+
+  // unknown
+  auto boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
+  objects.add(make_shared<constant_medium>(boundary, .0001, color(1,1,1)));
+
+  auto pertext = make_shared<noise_texture>(0.2);
+  objects.add(make_shared<sphere>(point3(220,360,300), 80, make_shared<lambertian>(pertext)));
+  auto head_cover = make_shared<sphere>(point3(220, 360, 300), 82, make_shared<dielectric>(1.5));
+  objects.add(make_shared<constant_medium>(head_cover, .0001, color(.33,.33,.66)));
+
+  // alternatively make smaller variations on the head as moving spheres of the same size to make a cylindrical body
+
+  // body
+  hittable_list boxes2;
+  int ns = 120;
+  for (int j = 0; j < ns; j++) {
+    auto c = make_shared<lambertian>(color(.33, .33, .66)*random_double(0.6,1.1));
+    auto pos = vec3(random_double(20, 140), random_double(0, 220), random_double(20, 140));
+    auto pos2 = pos + vec3(0,-random_double(5, 20),0);
+    boxes2.add(make_shared<moving_sphere>(pos,pos2, 0, 1, 20, c));
+  }
+
+  objects.add(make_shared<translate>(make_shared<rotate_y>(make_shared<bvh_node>(boxes2, 0.0, 1.0), 15),
+                                     vec3(140,120,220)));
+
+  return objects;
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -358,12 +416,20 @@ int main() {
     samples_per_pixel = 100;
     cam = camera_at(point3(278, 278, -800), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
     break;
-  default:
   case 8:
     world = bvh_node(final_scene(), 0, 1);
     aspect_ratio = 1.0;
     image_width = 800;
     samples_per_pixel = 1000;
+    background = color(0,0,0);
+    cam = camera_at(point3(478, 278, -600), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
+    break;
+  default:
+  case 9:
+    world = bvh_node(ghost_scene(), 0, 1);
+    aspect_ratio = 1.0;
+    image_width = 800;
+    samples_per_pixel = 16;
     background = color(0,0,0);
     cam = camera_at(point3(478, 278, -600), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
     break;
