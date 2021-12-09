@@ -4,6 +4,7 @@
 #include "hittable_list.hpp"
 #include "sphere.hpp"
 #include "moving_sphere.hpp"
+#include "triangle.hpp"
 #include "camera.hpp"
 #include "material.hpp"
 #include "bvh.hpp"
@@ -353,6 +354,18 @@ hittable_list ghost_scene() {
   return objects;
 }
 
+hittable_list triangle_test() {
+  hittable_list world;
+
+  // auto ground = make_shared<lambertian>(color(0.5, 0.0, 0.0));
+  // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground));
+
+  auto tex = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+  world.add(make_shared<triangle>(point3(-100,0,0), point3(0,100,0), point3(-100,100,0), tex));
+
+  return world;
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -424,7 +437,6 @@ int main() {
     background = color(0,0,0);
     cam = camera_at(point3(478, 278, -600), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
     break;
-  default:
   case 9:
     world = bvh_node(ghost_scene(), 0, 1);
     aspect_ratio = 1.0;
@@ -433,6 +445,11 @@ int main() {
     background = color(0,0,0);
     cam = camera_at(point3(478, 278, -600), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
     break;
+  default:
+  case 10:
+    world = bvh_node(triangle_test(), 0, 1);
+    background = color(0.70, 0.80, 1.00);
+    cam = camera_at(point3(0, 200, 200), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
   }
 
   // Render
