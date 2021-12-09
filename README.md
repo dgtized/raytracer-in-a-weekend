@@ -14,3 +14,4 @@ Other Resources:
 
  * [Camera and Lenses](https://ciechanow.ski/cameras-and-lenses/)
  * [ScratchAPixel](https://www.scratchapixel.com/)
+ * [Incremental Raytracing](https://www.peterstefek.me/incr-ray-tracer.html)
