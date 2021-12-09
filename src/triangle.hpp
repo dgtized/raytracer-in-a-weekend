@@ -1,6 +1,8 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
 
+#include "rtweekend.hpp"
+
 #include "hittable.hpp"
 #include "vec3.hpp"
 
@@ -20,6 +22,7 @@ public:
 
 // ref: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
 bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+
   // compute plane's normal
   vec3 ab = b - a;
   vec3 ac = c - a;
@@ -36,15 +39,18 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   // handle if t is in t_min/t_max or is that a different t?
   float t = (dot(N, r.origin()) + d) / NdotRayDirection;
   // check if the triangle is behind the ray or outside of t_min/t_max
-  if (t < 0 || t < t_min || t > t_max) return false;
+  // used to have t < 0;
+  if (t < t_min || t > t_max) return false;
+
+  std::cerr << "tried\n" << std::endl;
 
   // compute intersection point
   point3 P = r.at(t);
 
+  std::cerr << P << std::endl;
+
   // inside-outside test
   vec3 C;
-
-  printf("tried\n");
 
   // edge0
   vec3 edge0 = b - a;
@@ -64,7 +70,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   C = cross(edge2, vp_c);
   if (dot(N,C) < 0) return false;
 
-  printf("hit\n");
+  std::cerr << "hit\n" << std::endl;
 
   // TODO: fix for coordinate mapping
   rec.u = 0.5;
@@ -81,8 +87,8 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 bool triangle::bounding_box(double time0, double time1, aabb& output_box) const {
   // TODO: figure out how to incorporate c;
   // make sure there is some fake depth along the plane of the triangle ala aarect boxes
-  printf("bounding_box\n");
-  output_box = surrounding_box(aabb(a,b), aabb(a,c));
+  std::cerr << "bounding_box\n" << std::endl;
+  output_box = surrounding_box(surrounding_box(aabb(a,b), aabb(a,c)), aabb(b,c));
   return true;
 }
 
