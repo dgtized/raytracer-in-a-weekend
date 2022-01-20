@@ -360,8 +360,12 @@ hittable_list triangle_test() {
   // auto ground = make_shared<lambertian>(color(0.5, 0.0, 0.0));
   // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground));
 
-  auto tex = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-  world.add(make_shared<triangle>(point3(-100,0,0), point3(0,100,0), point3(-100,100,0), tex));
+  auto debug_color = make_shared<lambertian>(color(1.0,0.0,0.0));
+  world.add(make_shared<sphere>(point3(-100,0,10), 10, debug_color));
+  world.add(make_shared<sphere>(point3(0,100,10), 10, debug_color));
+  world.add(make_shared<sphere>(point3(-100,100,0), 10, debug_color));
+  auto tex = make_shared<lambertian>(color(0.0, 1.0, 0.0));
+  world.add(make_shared<triangle>(point3(-100,0,10), point3(0,100,10), point3(-100,100,0), tex));
 
   return world;
 }
@@ -450,7 +454,7 @@ int main() {
   case 10:
     world_list = triangle_test();
     background = color(0.70, 0.80, 1.00);
-    cam = camera_at(point3(0, 200, 200), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
+    cam = camera_at(point3(200, 200, 200), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
   }
 
   // Render
