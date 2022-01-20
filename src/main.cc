@@ -360,6 +360,7 @@ hittable_list triangle_test() {
   // auto ground = make_shared<lambertian>(color(0.5, 0.0, 0.0));
   // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground));
 
+  // Consider rendering the expected normal of the entire triangle as a box in the example?
   auto debug_color = make_shared<lambertian>(color(1.0,0.0,0.0));
   world.add(make_shared<sphere>(point3(-100,0,10), 10, debug_color));
   world.add(make_shared<sphere>(point3(0,100,10), 10, debug_color));
