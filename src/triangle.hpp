@@ -23,6 +23,7 @@ public:
 // ref: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
 bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
 
+
   // compute plane's normal
   vec3 ab = b - a;
   vec3 ac = c - a;
@@ -42,12 +43,10 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   // used to have t < 0;
   if (t < t_min || t > t_max) return false;
 
-  std::cerr << "tried\n" << std::endl;
-
   // compute intersection point
   point3 P = r.at(t);
 
-  std::cerr << P << std::endl;
+  //std::cerr << "tried: " << P << std::endl;
 
   // inside-outside test
   vec3 C;
@@ -68,9 +67,14 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   vec3 edge2 = a - c;
   vec3 vp_c = P - c;
   C = cross(edge2, vp_c);
-  if (dot(N,C) < 0) return false;
+  // Commenting this out includes one edge worth of green in the output but
+  // appears positioned incorrectly, so maybe the normal is incorrect as
+  // questioned below? Or maybe not as flipping and hardcoding it to be 0,0,1
+  // did not change the segment rendered green.
 
-  std::cerr << "hit\n" << std::endl;
+  //if (dot(N,C) < 0) return false;
+
+  std::cerr << "hit: " << dot(N,C) << " " << P << std::endl;
 
   // TODO: fix for coordinate mapping
   rec.u = 0.5;
