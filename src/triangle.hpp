@@ -36,17 +36,15 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   if (fabs(NdotRayDirection) < kEpsilon)
     return false;
 
-  float d = dot(N, a);
+  float d = -dot(N, a);
   // handle if t is in t_min/t_max or is that a different t?
-  float t = (dot(N, r.origin()) + d) / NdotRayDirection;
+  float t = -(dot(N, r.origin()) + d) / NdotRayDirection;
   // check if the triangle is behind the ray or outside of t_min/t_max
   // used to have t < 0;
   if (t < t_min || t > t_max) return false;
 
   // compute intersection point
   point3 P = r.at(t);
-
-  //std::cerr << "tried: " << P << std::endl;
 
   // inside-outside test
   vec3 C;
@@ -67,14 +65,8 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   vec3 edge2 = a - c;
   vec3 vp_c = P - c;
   C = cross(edge2, vp_c);
-  // Commenting this out includes one edge worth of green in the output but
-  // appears positioned incorrectly, so maybe the normal is incorrect as
-  // questioned below? Or maybe not as flipping and hardcoding it to be 0,0,1
-  // did not change the segment rendered green.
 
-  //if (dot(N,C) < 0) return false;
-
-  std::cerr << "hit: " << dot(N,C) << " " << P << std::endl;
+  if (dot(N,C) < 0) return false;
 
   // TODO: fix for coordinate mapping
   rec.u = 0.5;

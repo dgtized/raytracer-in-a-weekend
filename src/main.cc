@@ -357,16 +357,27 @@ hittable_list ghost_scene() {
 hittable_list triangle_test() {
   hittable_list world;
 
+  point3 a = point3(-10,0,0);
+  point3 b = point3(0,10,0);
+  point3 c = point3(-10,10,0);
+  point3 d = point3(10,5,5);
+
   // auto ground = make_shared<lambertian>(color(0.5, 0.0, 0.0));
   // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground));
 
   // Consider rendering the expected normal of the entire triangle as a box in the example?
-  auto debug_color = make_shared<lambertian>(color(1.0,0.0,0.0));
-  world.add(make_shared<sphere>(point3(-100,0,10), 10, debug_color));
-  world.add(make_shared<sphere>(point3(0,100,10), 10, debug_color));
-  world.add(make_shared<sphere>(point3(-100,100,0), 10, debug_color));
-  auto tex = make_shared<lambertian>(color(0.0, 1.0, 0.0));
-  world.add(make_shared<triangle>(point3(-100,0,10), point3(0,100,10), point3(-100,100,0), tex));
+  auto a_color = make_shared<lambertian>(color(1.0,0.0,0.0));
+  auto b_color = make_shared<lambertian>(color(0.0,1.0,0.0));
+  auto c_color = make_shared<lambertian>(color(0.0,0.0,1.0));
+  auto d_color = make_shared<lambertian>(color(0.0,0.5,0.5));
+  world.add(make_shared<sphere>(a, 1, a_color));
+  world.add(make_shared<sphere>(b, 1, b_color));
+  world.add(make_shared<sphere>(c, 1, c_color));
+  world.add(make_shared<sphere>(d, 1, d_color));
+  auto tex0 = make_shared<lambertian>(color(0.0, 1.0, 0.0));
+  world.add(make_shared<triangle>(a,b,c, tex0));
+  auto tex1 = make_shared<lambertian>(color(0.0, 0.0, 1.0));
+  world.add(make_shared<triangle>(a,b,d, tex1));
 
   return world;
 }
@@ -455,7 +466,7 @@ int main() {
   case 10:
     world_list = triangle_test();
     background = color(0.70, 0.80, 1.00);
-    cam = camera_at(point3(200, 200, 200), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
+    cam = camera_at(point3(0, 0, 20), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
   }
 
   // Render
