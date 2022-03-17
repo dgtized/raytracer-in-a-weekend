@@ -402,7 +402,6 @@ int main() {
   // World
 
   bvh_node world;
-  hittable_list world_list;
   camera cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.1);
   color background(0,0,0);
 
@@ -464,7 +463,7 @@ int main() {
     break;
   default:
   case 10:
-    world_list = triangle_test();
+    world = bvh_node(triangle_test(), 0, 1);
     background = color(0.70, 0.80, 1.00);
     cam = camera_at(point3(0, 0, 20), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
   }
@@ -484,7 +483,7 @@ int main() {
         auto v = double(j + random_double()) / (image_height-1);
 
         ray r = cam.get_ray(u, v);
-        pixel_color += ray_color(r, background, world_list, max_depth);
+        pixel_color += ray_color(r, background, world, max_depth);
       }
       write_color(std::cout, pixel_color, samples_per_pixel);
     }

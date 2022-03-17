@@ -81,9 +81,6 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 }
 
 bool triangle::bounding_box(double time0, double time1, aabb& output_box) const {
-  // TODO: figure out how to incorporate c;
-  // make sure there is some fake depth along the plane of the triangle ala aarect boxes
-  std::cerr << "bounding_box\n" << std::endl;
   output_box = surrounding_box(surrounding_box(aabb(a,b), aabb(a,c)), aabb(b,c));
   return true;
 }
