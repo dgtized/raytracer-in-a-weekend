@@ -382,6 +382,31 @@ hittable_list triangle_test() {
   return world;
 }
 
+hittable_list st_patricks_test() {
+  hittable_list world;
+
+  auto green = make_shared<lambertian>(color(0.1, 0.8, 0.2));
+  auto orange = make_shared<lambertian>(color(0.6, 0.8, 0.4));
+
+  point3 base = point3(0.0, 0.0, 0.0);
+  world.add(make_shared<sphere>(base, 0.5, green));
+
+  float r = 15.0;
+  float width = 0.7;
+  for(float theta = 0.0; theta < 2*pi; theta += pi/2) {
+    for(float t = theta; t <= (theta + width); t += width / 2) {
+      std::cerr << t << std::endl;
+      point3 start = point3(r * cos(t), r*sin(t), 0.0);
+      point3 end = point3(r * cos(t+width), r*sin(t+width), 0.0);
+      world.add(make_shared<triangle>(base, start, end, green));
+      // world.add(make_shared<sphere>(start, 0.5, green));
+      // world.add(make_shared<sphere>(end, 0.5, orange));
+    }
+  }
+
+  return world;
+}
+
 camera camera_at(const point3 &lookfrom, const point3 &lookat,
                  double aspect_ratio, double fov, double aperture) {
   vec3 vup(0,1,0);
@@ -402,6 +427,7 @@ int main() {
   // World
 
   bvh_node world;
+  hittable_list world_list;
   camera cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.1);
   color background(0,0,0);
 
@@ -461,9 +487,14 @@ int main() {
     background = color(0,0,0);
     cam = camera_at(point3(478, 278, -600), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
     break;
-  default:
   case 10:
     world = bvh_node(triangle_test(), 0, 1);
+    background = color(0.70, 0.80, 1.00);
+    cam = camera_at(point3(0, 0, 20), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
+  default:
+  case 11:
+    // world = bvh_node(st_patricks_test(), 0, 1);
+    world_list = st_patricks_test();
     background = color(0.70, 0.80, 1.00);
     cam = camera_at(point3(0, 0, 20), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
   }
@@ -483,7 +514,7 @@ int main() {
         auto v = double(j + random_double()) / (image_height-1);
 
         ray r = cam.get_ray(u, v);
-        pixel_color += ray_color(r, background, world, max_depth);
+        pixel_color += ray_color(r, background, world_list, max_depth);
       }
       write_color(std::cout, pixel_color, samples_per_pixel);
     }

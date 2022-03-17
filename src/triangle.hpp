@@ -81,6 +81,7 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 }
 
 bool triangle::bounding_box(double time0, double time1, aabb& output_box) const {
+  // FIXME: aabb hitbox is not working for certain angles on our shamrock example
   output_box = surrounding_box(surrounding_box(aabb(a,b), aabb(a,c)), aabb(b,c));
   return true;
 }
