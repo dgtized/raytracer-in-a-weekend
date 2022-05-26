@@ -357,10 +357,11 @@ hittable_list ghost_scene() {
 hittable_list triangle_test() {
   hittable_list world;
 
-  point3 a = point3(-10,0,0);
-  point3 b = point3(0,10,0);
-  point3 c = point3(-10,10,0);
-  point3 d = point3(10,5,5);
+  point3 origin = point3(0,0,0);
+  point3 a = point3(0,10,0);
+  point3 b = point3(-10,0,0);
+  point3 c = point3(0,0,-10);
+  point3 d = origin;
 
   // auto ground = make_shared<lambertian>(color(0.5, 0.0, 0.0));
   // world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground));
@@ -375,9 +376,14 @@ hittable_list triangle_test() {
   world.add(make_shared<sphere>(c, 1, c_color));
   world.add(make_shared<sphere>(d, 1, d_color));
   auto tex0 = make_shared<lambertian>(color(0.0, 1.0, 0.0));
-  world.add(make_shared<triangle>(a,b,c, tex0));
+  world.add(make_shared<triangle>(d,a,b, tex0)); // in z-plane
   auto tex1 = make_shared<lambertian>(color(0.0, 0.0, 1.0));
-  world.add(make_shared<triangle>(a,b,d, tex1));
+  world.add(make_shared<triangle>(d,c,b, tex1)); // in y-plane
+  auto tex2 = make_shared<lambertian>(color(0.5, 0.0, 1.0));
+  world.add(make_shared<triangle>(d,c,a, tex2)); // in x-plane
+
+  auto light = make_shared<diffuse_light>(color(1.0,1.0,1.0));
+  world.add(make_shared<sphere>(point3(-20,0,-20), 10, light));
 
   return world;
 }
@@ -433,7 +439,7 @@ int main() {
   camera cam = camera_at(point3(13,2,3), point3(0,0,0), aspect_ratio, 20.0, 0.1);
   color background(0,0,0);
 
-  switch(0) {
+  switch(10) {
   case 1:
     world = bvh_node(random_scene(), 0, 1);
     background = color(0.70, 0.80, 1.00);
@@ -490,9 +496,11 @@ int main() {
     cam = camera_at(point3(478, 278, -600), point3(278, 278, 0), aspect_ratio, 40.0, 0.0);
     break;
   case 10:
-    world = bvh_node(triangle_test(), 0, 1);
-    background = color(0.70, 0.80, 1.00);
-    cam = camera_at(point3(0, 0, 20), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
+    // world = bvh_node(triangle_test(), 0, 1);
+    world_list = triangle_test();
+    background = color(0.1, 0.1, 0.1);
+    cam = camera_at(point3(-5, 5, -20), point3(0, 0, 0), aspect_ratio, 75.0, 0.0);
+    break;
   default:
   case 11:
     // world = bvh_node(st_patricks_test(), 0, 1);
