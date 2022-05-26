@@ -72,12 +72,17 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   // flatten out triangle, pick a corner as origin, and then calculate u,v as
   // something related to the magnitude of the distance between the intersection
   // point within the triangle and the triangle texture origin?
+  // See also barycentric coordinates:
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates
 
   // u,v is needed for lambertian scatter/albedo or something, but giving it
   // random values still gave a uniform color, so it may be related to the
   // outward normal instead.
 
   // also the aabb boxes are still wrong so it can't fit in bvh_nodes
+
+  // also triangle normal depends on coordinate system handedness
+  // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/geometry-of-a-triangle
   rec.u = 0.5;
   rec.v = 0.5;
   rec.t = t;
