@@ -69,6 +69,15 @@ bool triangle::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
   if (dot(N,C) < 0) return false;
 
   // TODO: fix for coordinate mapping
+  // flatten out triangle, pick a corner as origin, and then calculate u,v as
+  // something related to the magnitude of the distance between the intersection
+  // point within the triangle and the triangle texture origin?
+
+  // u,v is needed for lambertian scatter/albedo or something, but giving it
+  // random values still gave a uniform color, so it may be related to the
+  // outward normal instead.
+
+  // also the aabb boxes are still wrong so it can't fit in bvh_nodes
   rec.u = 0.5;
   rec.v = 0.5;
   rec.t = t;
